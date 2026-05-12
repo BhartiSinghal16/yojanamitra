@@ -11,12 +11,8 @@ const PORT = process.env.PORT || 5000;
 
 app.use(helmet());
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'https://yojanamitra-neon.vercel.app/',
-  ],
-  credentials: true,
+  origin: '*',
+  credentials: false,
 }));
 app.use(morgan('dev'));
 app.use(express.json());
