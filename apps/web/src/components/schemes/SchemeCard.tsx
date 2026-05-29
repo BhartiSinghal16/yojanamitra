@@ -81,27 +81,43 @@ export const SchemeCard: React.FC<Props> = ({ match, language, rank, theme }) =>
 
   // ── AI Guide fetcher ──
   const fetchGuide = async () => {
-    if (guide) return;
-    setGuideLoading(true);
-    setGuideError(null);
-    try {
-      const res = await fetch('http://localhost:5000/api/guide', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          scheme_id: scheme.id,
-          profile: (window as any).__ym_profile,
-        }),
-      });
-      if (!res.ok) throw new Error('API error');
-      const data = await res.json();
-      setGuide(data.guide);
-    } catch {
-      setGuideError('Could not generate guide. Please try again.');
-    } finally {
-      setGuideLoading(false);
-    }
-  };
+  // Guide already included in scheme data from smartmatch
+  if (scheme.guide_steps_en && scheme.guide_steps_en.length > 0) {
+    setGuide({
+      intro: `This scheme is perfect for you based on your profile.`,
+      steps: (hi ? scheme.guide_steps_hi : scheme.guide_steps_en).map((s: any) => ({
+        step: s.step,
+        title: hi ? s.title_hi : s.title_en,
+        detail: hi ? s.desc_hi : s.desc_en,
+        tip: s.tip,
+      })),
+      time_required: '7-15 working days',
+      common_mistakes: (scheme as any).common_mistakes || [],
+      pro_tip: (scheme as any).pro_tip || '',
+    });
+    return;
+  }
+
+  // Fallback to API if no guide in scheme
+  setGuideLoading(true);
+  setGuideError(null);
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/guide`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        scheme_id: scheme.id,
+        profile: (window as any).__ym_profile,
+      }),
+    });
+    const data = await res.json();
+    setGuide(data.guide);
+  } catch {
+    setGuideError('Could not generate guide. Please try again.');
+  } finally {
+    setGuideLoading(false);
+  }
+};
 
   return (
     <div

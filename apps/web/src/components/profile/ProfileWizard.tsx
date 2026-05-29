@@ -50,6 +50,7 @@ export const ProfileWizard: React.FC<Props> = ({ onSubmit, loading, theme, langu
 
   const dark = theme === 'dark';
   const lang = language || 'en';
+  const hi = lang === 'hi';
 
   const tc = {
     text:           dark ? '#ffffff'                   : '#111118',
@@ -247,13 +248,13 @@ export const ProfileWizard: React.FC<Props> = ({ onSubmit, loading, theme, langu
               onChange={e => update('has_disability', e.target.checked)}
               style={{ width: 16, height: 16, accentColor: tc.gold }} />
             <label htmlFor="pwd" style={{ fontSize: 14, color: tc.muted, cursor: 'pointer' }}>
-              Person with disability (PwD)
+              {hi ? 'विकलांग व्यक्ति (PwD)' : 'Person with disability (PwD)'}
             </label>
           </div>
 
           {/* Language */}
           <div>
-            <label style={label}>Preferred Language</label>
+            <label style={label}>{hi ? 'पसंदीदा भाषा' : 'Preferred Language'}</label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               {[{ v: 'en', l: 'English' }, { v: 'hi', l: 'हिंदी' }].map(({ v, l }) => (
                 <button key={v} style={chip(profile.preferred_language === v)}
@@ -272,7 +273,7 @@ export const ProfileWizard: React.FC<Props> = ({ onSubmit, loading, theme, langu
 
           {/* Annual Income with voice */}
           <div>
-            <label style={label}>Annual Income (₹) 🎤</label>
+            <label style={label}>{hi ? 'वार्षिक आय (₹) 🎤' : 'Annual Income (₹) 🎤'}</label>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <input
                 type="number"
@@ -291,16 +292,16 @@ export const ProfileWizard: React.FC<Props> = ({ onSubmit, loading, theme, langu
               />
             </div>
             <div style={{ fontSize: 13, color: tc.gold, marginTop: 8, fontWeight: 600 }}>
-              ₹{profile.annual_income.toLocaleString('en-IN')} / year
+              ₹{profile.annual_income.toLocaleString('en-IN')} / {hi ? 'वर्ष' : 'year'}
             </div>
             <div style={{ fontSize: 11, color: tc.mutedLight, marginTop: 4 }}>
-              💡 {lang === 'hi' ? 'बोलें: "एक लाख" या "पचास हजार"' : 'Say: "one lakh" or "fifty thousand"'}
+              💡 {hi ? 'बोलें: "एक लाख" या "पचास हजार"' : 'Say: "one lakh" or "fifty thousand"'}
             </div>
           </div>
 
           {/* Quick Select */}
           <div>
-            <label style={label}>Quick Select</label>
+            <label style={label}>{hi ? 'जल्दी चुनें' : 'Quick Select'}</label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
               {[
                 { l: 'Below ₹1L', v: 80000 },
@@ -324,7 +325,7 @@ export const ProfileWizard: React.FC<Props> = ({ onSubmit, loading, theme, langu
       {step === 2 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div>
-            <label style={label}>State</label>
+            <label style={label}>{hi ? 'राज्य' : 'State'}</label>
             <select style={selectStyle} value={profile.state_code}
               onChange={e => update('state_code', e.target.value)}>
               {STATES.map(st => (
@@ -333,7 +334,7 @@ export const ProfileWizard: React.FC<Props> = ({ onSubmit, loading, theme, langu
             </select>
           </div>
           <div>
-            <label style={label}>Occupation</label>
+            <label style={label}>{hi ? 'व्यवसाय' : 'Occupation'}</label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               {OCCUPATIONS.map(o => (
                 <button key={o.value} style={occChip(profile.occupation === o.value)}
@@ -354,15 +355,15 @@ export const ProfileWizard: React.FC<Props> = ({ onSubmit, loading, theme, langu
             borderRadius: 16, padding: 20,
           }}>
             {[
-              ['Age',           `${profile.age} years`],
-              ['Gender',        profile.gender],
-              ['Caste',         profile.caste.toUpperCase()],
-              ['Annual Income', `₹${profile.annual_income.toLocaleString('en-IN')}`],
-              ['State',         STATES.find(s => s.code === profile.state_code)?.name],
-              ['Occupation',    OCCUPATIONS.find(o => o.value === profile.occupation)?.label],
-              ['Family Size',   `${profile.family_size} members`],
-              ['Disability',    profile.has_disability ? 'Yes' : 'No'],
-              ['Language',      profile.preferred_language === 'en' ? 'English' : 'Hindi'],
+              [hi ? 'आयु' : 'Age',                     `${profile.age} ${hi ? 'वर्ष' : 'years'}`],
+              [hi ? 'लिंग' : 'Gender',                  profile.gender],
+              [hi ? 'जाति' : 'Caste',                   profile.caste.toUpperCase()],
+              [hi ? 'वार्षिक आय' : 'Annual Income',     `₹${profile.annual_income.toLocaleString('en-IN')}`],
+              [hi ? 'राज्य' : 'State',                  STATES.find(s => s.code === profile.state_code)?.name],
+              [hi ? 'व्यवसाय' : 'Occupation',           OCCUPATIONS.find(o => o.value === profile.occupation)?.label],
+              [hi ? 'परिवार का आकार' : 'Family Size',   `${profile.family_size} ${hi ? 'सदस्य' : 'members'}`],
+              [hi ? 'विकलांगता' : 'Disability',         profile.has_disability ? (hi ? 'हाँ' : 'Yes') : (hi ? 'नहीं' : 'No')],
+              [hi ? 'भाषा' : 'Language',                profile.preferred_language === 'en' ? 'English' : 'हिंदी'],
             ].map(([lbl, val]) => (
               <div key={lbl as string} style={{
                 display: 'flex', justifyContent: 'space-between',
@@ -374,7 +375,9 @@ export const ProfileWizard: React.FC<Props> = ({ onSubmit, loading, theme, langu
             ))}
           </div>
           <p style={{ textAlign: 'center', fontSize: 13, color: tc.mutedLight }}>
-            We'll match you to every scheme you qualify for.
+            {hi
+              ? 'हम आपको हर योजना से मिलाएंगे जिसके आप हकदार हैं।'
+              : "We'll match you to every scheme you qualify for."}
           </p>
         </div>
       )}
@@ -393,7 +396,7 @@ export const ProfileWizard: React.FC<Props> = ({ onSubmit, loading, theme, langu
             fontSize: 14, fontFamily: "'IBM Plex Sans', sans-serif",
             transition: 'all 0.2s',
           }}>
-          ← Back
+          ← {hi ? 'वापस' : 'Back'}
         </button>
 
         {step < steps.length - 1 ? (
@@ -405,7 +408,7 @@ export const ProfileWizard: React.FC<Props> = ({ onSubmit, loading, theme, langu
               fontWeight: 700, fontSize: 14, cursor: 'pointer',
               fontFamily: "'IBM Plex Sans', sans-serif", transition: 'opacity 0.2s',
             }}>
-            Next →
+            {hi ? 'आगे →' : 'Next →'}
           </button>
         ) : (
           <button
@@ -427,9 +430,11 @@ export const ProfileWizard: React.FC<Props> = ({ onSubmit, loading, theme, langu
                   <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
                 </svg>
                 <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-                Matching...
+                {hi ? 'योजनाएं खोज रहे हैं... (15 सेकंड)' : 'Finding Schemes... (15 sec)'}
               </>
-            ) : '🔍 Find My Schemes'}
+            ) : (
+              hi ? '🔍 मेरी योजनाएं खोजें' : '🔍 Find My Schemes'
+            )}
           </button>
         )}
       </div>
