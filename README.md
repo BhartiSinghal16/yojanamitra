@@ -1,6 +1,6 @@
 # 🇮🇳 YojanaMitra — AI-Powered Government Scheme Matcher
 
-> **Find every Indian government scheme you qualify for — in 2 minutes.**
+> **Find every Indian government scheme you qualify for — in seconds.**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-yojanamitra--neon.vercel.app-f5c842?style=for-the-badge&logo=vercel&logoColor=black)](https://yojanamitra-neon.vercel.app)
 [![Backend](https://img.shields.io/badge/API-Render-purple?style=for-the-badge&logo=render&logoColor=white)](https://yojanamitra-7i7h.onrender.com/health)
@@ -20,14 +20,15 @@ Millions of Indian citizens miss out on government welfare benefits they are ent
 
 | Feature | Description |
 |---|---|
-| 🎯 **Smart Matching Engine** | Rule-based eligibility engine matches users to 3,000+ central and state schemes instantly |
-| 🤖 **AI Application Guide** | Groq LLM generates personalized step-by-step application guides in Hindi and English |
+| 🤖 **Groq AI Matching** | Llama 3.3 70B finds 8–20 matching schemes dynamically — no fixed database needed, always up to date |
+| 🔍 **Smart Keyword Search** | Type one word — "kheti", "padhai", "mahila", "pension" — get all relevant schemes instantly |
 | 🎤 **Voice Input** | Speak your age, income, family size in Hindi or English — form fills automatically |
-| 🌐 **Bilingual** | Full Hindi + English support across form, results, and AI guides |
+| 🌐 **Bilingual** | Full Hindi + English support across form, results, search, and AI guides |
 | 🌙 **Dark / Light Mode** | Theme toggle with localStorage persistence |
-| 📱 **Mobile First** | Fully responsive — works on any screen size |
+| 📱 **Mobile First** | Fully responsive — works perfectly on any screen size |
 | 📄 **Document Checklist** | Know exactly what documents to bring for each scheme |
 | 🪜 **Application Steps** | Step-by-step guide with tips for every scheme |
+| 🎯 **Pro Tips** | Personalized insider advice for each scheme based on user profile |
 
 ---
 
@@ -35,35 +36,36 @@ Millions of Indian citizens miss out on government welfare benefits they are ent
 
 ```
 ┌─────────────────────────────────────────────────┐
-│                  React Frontend                  │
-│         (Vite + TypeScript + Tailwind)          │
-└────────────────────┬────────────────────────────┘
-                     │ REST API
-┌────────────────────▼────────────────────────────┐
-│              Express.js Backend                  │
+│              React Frontend (Vite)               │
+│         TypeScript + Inline Styles              │
 │                                                  │
-│  ┌─────────────────┐   ┌──────────────────────┐ │
-│  │  Rule Engine    │──▶│   Groq AI Layer      │ │
-│  │ (Hard filters)  │   │ (Rank + Explain)     │ │
-│  └─────────────────┘   └──────────────────────┘ │
+│  ProfileWizard → matchSchemes() → SchemeCard    │
+│  Search Component → /api/search → Results       │
+└────────────────────┬────────────────────────────┘
+                     │ REST API (axios)
+┌────────────────────▼────────────────────────────┐
+│           Express.js Backend (Node.js)           │
+│                                                  │
+│  POST /api/smartmatch  →  Groq AI (profile)     │
+│  POST /api/search      →  Groq AI (keyword)     │
+│  GET  /health          →  Status check          │
 └────────────────────┬────────────────────────────┘
                      │
 ┌────────────────────▼────────────────────────────┐
-│           Supabase (PostgreSQL)                  │
-│   schemes · user_profiles · scheme_matches       │
+│         Groq API — Llama 3.3 70B                │
+│   Finds schemes + generates guides dynamically  │
 └─────────────────────────────────────────────────┘
 ```
 
-### Why Hybrid Rule-Based + LLM?
+### Why 100% Groq-Powered?
 
-| | Pure LLM | Rule-Based Only | YojanaMitra (Hybrid) |
-|---|---|---|---|
-| Speed | 2–5s | <10ms | <50ms |
-| Cost per query | ~₹4 | Free | ~₹0.4 |
-| Auditable | ❌ | ✅ | ✅ |
-| Personalized explanation | ✅ | ❌ | ✅ |
-
-The rule engine does the hard eligibility filtering. The LLM only sees the ~20 schemes that pass the filter, ranks them, and writes personalized guides. This is the right division of labour.
+| | Fixed Database | 100% Groq (YojanaMitra) |
+|---|---|---|
+| Schemes up to date | ❌ Manual updates needed | ✅ Always current |
+| State schemes | ❌ Hard to maintain | ✅ Included automatically |
+| New scheme launched | ❌ Miss it | ✅ Found instantly |
+| Personalized guides | ❌ Generic text | ✅ Tailored to profile |
+| Setup complexity | High | Zero — just one API key |
 
 ---
 
@@ -71,26 +73,20 @@ The rule engine does the hard eligibility filtering. The LLM only sees the ~20 s
 
 ### Frontend
 - **React 18** + **TypeScript** + **Vite**
-- **Tailwind CSS** for styling
-- **React Hook Form** + **Zod** for form validation
-- **TanStack Query** for data fetching
-- **Web Speech API** for voice input
+- Pure inline styles — no CSS framework dependency
+- **Web Speech API** — built-in browser voice input (no library)
+- **Axios** for API calls
 
 ### Backend
-- **Node.js** + **Express.js**
-- **TypeScript** with strict mode
+- **Node.js** + **Express.js** + **TypeScript**
+- **Groq SDK** — Llama 3.3 70B for dynamic scheme matching
 - **Zod** for request validation
-- **Groq SDK** for LLM integration
-
-### Database & Services
-- **Supabase** (PostgreSQL) — schemes, profiles, matches
-- **Groq** (Llama 3.3 70B) — AI application guides
-- **Twilio** — WhatsApp notifications (coming soon)
+- **Helmet** + **CORS** for security
 
 ### DevOps
-- **Vercel** — Frontend deployment
-- **Render** — Backend deployment
-- **GitHub** — Version control + CI
+- **Vercel** — Frontend hosting (auto-deploys on git push)
+- **Render** — Backend hosting (auto-deploys on git push)
+- **GitHub** — Version control
 
 ---
 
@@ -98,9 +94,7 @@ The rule engine does the hard eligibility filtering. The LLM only sees the ~20 s
 
 ### Prerequisites
 - Node.js 18+
-- npm 9+
-- Supabase account
-- Groq API key
+- Groq API key (free at console.groq.com)
 
 ### Installation
 
@@ -120,19 +114,10 @@ Create `apps/api/.env`:
 ```env
 PORT=5000
 CLIENT_URL=http://localhost:5173
-
-# Supabase
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_SERVICE_KEY=your_supabase_service_role_key
-
-# Groq
-GROQ_API_KEY=your_groq_api_key
-
-# Twilio (optional)
-TWILIO_ACCOUNT_SID=your_twilio_sid
-TWILIO_AUTH_TOKEN=your_twilio_token
-TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
+GROQ_API_KEY=your_groq_api_key_here
 ```
+
+That's it — no database needed!
 
 ### Run Locally
 
@@ -150,104 +135,127 @@ npm run dev
 
 ---
 
-## 📊 Database Schema
-
-```sql
-schemes          — 15+ central & state schemes with eligibility JSONB
-user_profiles    — citizen profiles with demographic data
-scheme_matches   — matched schemes per session with scores
-states           — reference table for 15 Indian states
-```
-
-### Eligibility JSONB Structure
-```json
-{
-  "min_age": 18,
-  "max_age": 40,
-  "max_annual_income": 250000,
-  "castes": ["sc", "st", "obc"],
-  "genders": ["female"],
-  "occupations": ["farmer", "daily_wage_worker"],
-  "disability_required": false,
-  "must_own_land": true
-}
-```
-
----
-
 ## 🗂️ Project Structure
 
 ```
 yojanamitra/
 ├── apps/
-│   ├── web/                    # React + TypeScript frontend
+│   ├── web/                          # React + TypeScript frontend
 │   │   └── src/
 │   │       ├── components/
-│   │       │   ├── profile/    # ProfileWizard with voice input
-│   │       │   ├── schemes/    # SchemeCard with AI guide
-│   │       │   └── ui/         # VoiceInput, Button
-│   │       ├── pages/          # Home (landing + form + results)
-│   │       ├── lib/            # API client
-│   │       └── types/          # Shared TypeScript types
-│   └── api/                    # Node.js + Express backend
+│   │       │   ├── profile/
+│   │       │   │   └── ProfileWizard.tsx   # 4-step form with voice input
+│   │       │   ├── schemes/
+│   │       │   │   └── SchemeCard.tsx      # Scheme cards with details
+│   │       │   ├── ui/
+│   │       │   │   └── VoiceInput.tsx      # Web Speech API component
+│   │       │   └── Search.tsx              # Keyword search component
+│   │       ├── pages/
+│   │       │   └── Home.tsx               # Landing + Form + Results pages
+│   │       ├── lib/
+│   │       │   └── api.ts                 # API client (axios)
+│   │       └── types/
+│   │           └── index.ts               # Shared TypeScript types
+│   └── api/                          # Node.js + Express backend
 │       └── src/
-│           ├── routes/         # match.ts, guide.ts
-│           ├── services/       # matchingEngine.ts, groqService.ts
-│           └── db/             # supabase.ts
-├── supabase/
-│   └── migrations/             # SQL schema + seed data
-└── packages/
-    └── shared/                 # Shared types
+│           ├── routes/
+│           │   ├── smartmatch.ts          # Profile-based AI matching
+│           │   └── search.ts              # Keyword search route
+│           └── index.ts                   # Express server entry point
+└── README.md
 ```
 
 ---
 
-## 🧠 How the Matching Engine Works
+## 🧠 How It Works
 
-```typescript
-// 1. Rule engine filters all schemes (fast, deterministic)
-function evaluateEligibility(profile, scheme) {
-  // Hard checks: age, income, caste, gender, occupation, state
-  // Returns: { eligible: boolean, score: number, reasons: string[] }
-}
-
-// 2. Groq AI ranks and explains (only for matched schemes)
-// Prompt includes: profile + scheme details
-// Returns: personalized step-by-step guide in Hindi/English
+### Profile-Based Matching (`/api/smartmatch`)
+```
+User fills 4-step profile form
+        ↓
+Profile sent to Express backend
+        ↓
+Groq Llama 3.3 70B analyzes profile
+(age, gender, caste, income, state, occupation)
+        ↓
+AI finds 8–20 matching central + state schemes
+        ↓
+Returns scheme name, benefit, documents,
+application steps, pro tip — all personalized
+        ↓
+Frontend renders scheme cards sorted by match score
 ```
 
-**Scoring logic:**
-- Base score: 50
-- Age match: +10
-- Income below limit (weighted): +0–20
-- Caste match (SC/ST/OBC specific): +15
-- Gender-specific scheme: +10
-- Occupation match: +15
-- State-specific: +10
-- Disability benefit: +20
+### Keyword Search (`/api/search`)
+```
+User types "kheti" / "किसान" / "farmer"
+        ↓
+Query + language sent to backend
+        ↓
+Groq understands intent (Hindi or English)
+        ↓
+Returns all schemes for that category
+with eligibility, documents, steps
+        ↓
+Results shown in Hindi or English
+based on user's language preference
+```
+
+---
+
+## 🎤 Voice Input
+
+Uses browser's built-in **Web Speech API** — zero external libraries:
+
+```
+User clicks mic button → Browser starts listening
+        ↓
+User speaks: "twenty five" or "पच्चीस"
+        ↓
+Browser converts speech to text
+        ↓
+Code extracts number from text
+(handles "lakh", "thousand" for income)
+        ↓
+Value fills the form field automatically
+```
+
+Works in `hi-IN` (Hindi) and `en-IN` (English). Best support in Chrome.
+
+---
+
+## 🌐 Bilingual Support
+
+Every piece of text has two versions — Hindi and English. Language is controlled by a single `lang` variable. When switched:
+
+- Form labels switch language
+- Scheme names and benefits switch language  
+- AI search prompt switches to Hindi/English
+- Documents and steps switch language
+- All UI labels switch language
 
 ---
 
 ## 📸 Screenshots
 
-| Landing Page | Profile Wizard | Results |
+| Landing Page | Search | Results |
 |---|---|---|
-| Dark mode with animated tickers | 4-step wizard with voice input | Matched schemes with AI guides |
+| Animated tickers + keyword search in hero | One-word search with suggestion pills | AI-matched schemes with documents + steps |
 
 ---
 
 ## 🗺️ Roadmap
 
-- [x] Rule-based matching engine
-- [x] Groq AI personalized guides
+- [x] Groq AI dynamic scheme matching
+- [x] Smart keyword search (Hindi + English)
 - [x] Voice input (Hindi + English)
 - [x] Dark / light theme
-- [x] Bilingual (Hindi + English)
-- [ ] WhatsApp Bot via Twilio
-- [ ] PDF export of matched schemes
-- [ ] PWA — offline support
+- [x] Fully bilingual
+- [x] Mobile responsive
+- [ ] WhatsApp share results
+- [ ] PDF export
 - [ ] Phone OTP login
-- [ ] 50+ more schemes
+- [ ] PWA offline support
 
 ---
 
@@ -265,4 +273,5 @@ MIT License — feel free to fork and build on top of this.
 
 ---
 
-> *Data sourced from myscheme.gov.in and official government portals. YojanaMitra is not affiliated with the Government of India.*
+> *YojanaMitra uses Groq AI to find schemes dynamically. It is not affiliated with the Government of India.*
+
